@@ -51,7 +51,7 @@ const CASES: Record<
     tech: "FLUTTER | BYCRYPT | POSTGRESQL",
     accentIcon: "calendar",
     imageSrc: "/assets/tobitododisplay.png",
-    description: "A comprehensive student dashboard application built with Flutter, featuring task management, scheduling, and productivity tools. Includes secure authentication with bcrypt and PostgreSQL database integration."
+    description: "Imagine having a personal assistant that helps you organize your life, stay focused, and constantly move closer to the person you want to become. Tobi To-Do is an AI-powered productivity platform designed specifically for ambitious students who want more than just a basic to-do list. Instead of simply storing tasks, Tobi actively helps you plan your schedule, break down complex goals, track habits, and maintain focus through built-in deep-work tools. At the center of the app is Tobi, an intelligent assistant that analyzes your workload, detects procrastination patterns, and suggests better ways to manage your time. The app also introduces a unique feature called Dream Me, where users define the future version of themselves and track how closely their daily actions align with that vision. Tobi To-Do combines planning, execution, analytics, and motivation in one place—integrating calendars, task systems, focus tracking, AI insights, and gamification to keep users engaged and consistent. Instead of just telling you what you need to do, Tobi helps you become the person capable of achieving it."
   },
   nexora: {
     num: "02",

@@ -14,9 +14,6 @@ const WB = {
   canva: "/assets/workbench-canva.svg",
   gt: "/assets/workbench-gt-chart.svg",
   blender: "/assets/workbench-blender.svg",
-  mario: "/assets/sprite-mario.svg",
-  pieceI: "/assets/sprite-tetris-i.svg",
-  pieceL: "/assets/sprite-tetris-l.svg",
 } as const;
 
 export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbenchProps) {
@@ -51,7 +48,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute right-[9%] top-[2%] sm:right-[13%]">
+          <div className="pointer-events-auto absolute right-[10%] top-[2%] sm:right-[16%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(2)} // Nexora project
@@ -79,7 +76,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute right-[2%] bottom-[8%] sm:right-[12%] sm:bottom-[12%]">
+          <div className="pointer-events-auto absolute right-[10%] bottom-[8%] sm:right-[10%] sm:bottom-[12%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(0)} // Unity project
@@ -93,41 +90,13 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute left-[38%] top-[28%] sm:left-[42%] sm:top-[26%]">
+          <div className="pointer-events-auto absolute left-[37%] top-[26%] sm:left-[42%] sm:top-[26%]">
             <StickyNote variant="amber" rotation={-2.2} handwritten>
               Working on physics logic research for Tetris clone
             </StickyNote>
           </div>
 
-          <div className="pointer-events-auto absolute left-[12%] bottom-[6%] sm:left-[18%]">
-            <DraggableSprite rotation={-6} className="drop-shadow-lg">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={WB.mario}
-                alt="Super Mario rebuild sprite"
-                className="h-28 w-auto sm:h-32"
-                draggable={false}
-              />
-            </DraggableSprite>
-          </div>
-          <div className="pointer-events-auto absolute right-[22%] top-[38%] sm:right-[26%]">
-            <DraggableSprite rotation={8} className="drop-shadow-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={WB.pieceI} alt="Tetris I-piece blocks" className="h-36 w-auto" draggable={false} />
-            </DraggableSprite>
-          </div>
-          <div className="pointer-events-auto absolute right-[8%] top-[48%] sm:right-[12%]">
-            <DraggableSprite rotation={-5} className="drop-shadow-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={WB.pieceL}
-                alt="Tetris L-piece blocks"
-                className="h-16 w-auto sm:h-[4.5rem]"
-                draggable={false}
-              />
-            </DraggableSprite>
-          </div>
-        </div>
+                  </div>
       </div>
     </section>
   );
