@@ -1,14 +1,18 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Siren } from "lucide-react";
 import GlassDock from "../components/GlassDock";
 import HobbyistWorkbench from "../components/HobbyistWorkbench";
 import MouseGlowLayer from "../components/MouseGlowLayer";
 import StackedBentoCards from "../components/StackedBentoCards";
+import ProjectNavigation from "../components/ProjectNavigation";
+import NexoraCaseStudy from "../components/NexoraCaseStudy";
 
 export default function ProjectsPage() {
   const [glow, setGlow] = useState({ x: 50, y: 38 });
+  const [activeIndex, setActiveIndex] = useState(0); // Default to tobi (index 0)
+  const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
 
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const { clientX, clientY, currentTarget } = e;
@@ -17,6 +21,44 @@ export default function ProjectsPage() {
     const y = ((clientY - rect.top) / rect.height) * 100;
     setGlow({ x, y });
   }, []);
+
+  const handlePreviousProject = useCallback(() => {
+    setActiveIndex((prev) => Math.max(0, prev - 1));
+  }, []);
+
+  const handleNextProject = useCallback(() => {
+    setActiveIndex((prev) => Math.min(2, prev + 1)); // 3 projects total (0, 1, 2)
+  }, []);
+
+  const handleProjectSelect = useCallback((index: number) => {
+    setActiveIndex(index);
+  }, []);
+
+  const handleOpenCaseStudy = useCallback(() => {
+    setIsCaseStudyOpen(true);
+  }, []);
+
+  const handleCloseCaseStudy = useCallback(() => {
+    setIsCaseStudyOpen(false);
+  }, []);
+
+  // Keyboard navigation for arrow keys
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isCaseStudyOpen) return; // Don't navigate when modal is open
+      
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePreviousProject();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        handleNextProject();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handlePreviousProject, handleNextProject, isCaseStudyOpen]);
 
   return (
     <main
@@ -63,11 +105,30 @@ export default function ProjectsPage() {
 
       {/* Tier 1 — stacked bento case studies */}
       <div className="relative z-[15] mx-auto mt-2 w-full max-w-5xl px-2 sm:mt-4">
-        <StackedBentoCards />
+        <div className="text-center mb-4">
+          <p className="font-mono-jet text-[10px] text-zinc-500">
+            Use ← → arrow keys to navigate
+          </p>
+        </div>
+        <div className="relative">
+          <StackedBentoCards 
+            activeIndex={activeIndex} 
+            setActiveIndex={setActiveIndex}
+            onOpenCaseStudy={handleOpenCaseStudy}
+          />
+          <ProjectNavigation
+            currentIndex={activeIndex}
+            totalCount={3}
+            onPrevious={handlePreviousProject}
+            onNext={handleNextProject}
+          />
+        </div>
       </div>
 
       {/* Tier 2 — hobbyist workbench */}
-      <HobbyistWorkbench />
+      <HobbyistWorkbench onProjectSelect={handleProjectSelect} />
+
+      <NexoraCaseStudy isOpen={isCaseStudyOpen} onClose={handleCloseCaseStudy} />
 
       <GlassDock active="projects" />
     </main>

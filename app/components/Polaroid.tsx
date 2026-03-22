@@ -23,10 +23,10 @@ type PolaroidProps = {
 };
 
 const figureClass = (compact: boolean, className: string) =>
-  `select-none rounded-[2px] border border-zinc-300/90 bg-white shadow-[0_18px_40px_rgba(0,0,0,0.16)] ${
+  `select-none rounded-[2px] border-2 border-zinc-400 bg-white shadow-[0_20px_50px_rgba(0,0,0,0.25)] ${
     compact
-      ? "w-[200px] p-2.5 pb-3 sm:w-[210px]"
-      : "w-[240px] p-3 pb-4 sm:w-[260px] sm:p-3.5 sm:pb-5"
+      ? "w-[210px] p-2.5 pb-3 sm:w-[220px]"
+      : "w-[250px] p-3 pb-4 sm:w-[270px] sm:p-3.5 sm:pb-5"
   } ${className}`;
 
 export default function Polaroid({
@@ -47,12 +47,12 @@ export default function Polaroid({
 
   const inner = (
     <>
-      <div className="aspect-square overflow-hidden border-2 border-zinc-950 bg-zinc-100">
+      <div className="aspect-square overflow-hidden border-2 border-zinc-950 bg-zinc-100 mx-2 my-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageSrc}
           alt={imageAlt}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover scale-95"
           draggable={false}
         />
       </div>
@@ -80,9 +80,9 @@ export default function Polaroid({
       dragMomentum={false}
       dragConstraints={dragConstraints}
       dragElastic={0.06}
-      initial={{ rotate: initialRotation, scale: 0.98, opacity: 0 }}
+      initial={{ rotate: initialRotation, scale: 0.98, opacity: 1 }}
       animate={{ rotate: initialRotation, scale: 1, opacity: 1 }}
-      whileDrag={{ scale: 1.02, zIndex: whileDragZIndex, cursor: "grabbing" }}
+      whileDrag={{ scale: 1.02, zIndex: 100, cursor: "grabbing" }}
       transition={{ type: "spring", stiffness: 340, damping: 26 }}
       className={`cursor-grab ${figureClass(compact, className)}`}
     >

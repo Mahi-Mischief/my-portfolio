@@ -11,8 +11,10 @@ type MotionDragConstraints =
 
 const variants = {
   amber:
-    "border-amber-300/80 bg-amber-100 text-amber-950 shadow-[0_14px_36px_rgba(0,0,0,0.12)]",
-  sky: "border-sky-300/70 bg-sky-100 text-sky-950 shadow-[0_14px_36px_rgba(0,0,0,0.1)]",
+    "border-2 border-amber-400 bg-amber-100 text-amber-950 shadow-[0_18px_45px_rgba(0,0,0,0.2)]",
+  sky: "border-2 border-sky-400 bg-sky-100 text-sky-950 shadow-[0_18px_45px_rgba(0,0,0,0.18)]",
+  terminal: "border-2 border-green-600 bg-gray-900 text-green-400 shadow-[0_18px_45px_rgba(0,255,0,0.15)]",
+  lab: "border-2 border-amber-600 bg-amber-50 text-amber-900 shadow-[0_18px_45px_rgba(255,193,7,0.25)]",
 } as const;
 
 type StickyVariant = keyof typeof variants;
@@ -74,9 +76,9 @@ export default function StickyNote({
       dragMomentum={false}
       dragConstraints={dragConstraints}
       dragElastic={0.06}
-      initial={{ rotate: initialRotation, scale: 0.98, opacity: 0 }}
+      initial={{ rotate: initialRotation, scale: 0.98, opacity: 1 }}
       animate={{ rotate: initialRotation, scale: 1, opacity: 1 }}
-      whileDrag={{ scale: 1.02, zIndex: whileDragZIndex, cursor: "grabbing" }}
+      whileDrag={{ scale: 1.02, zIndex: 100, cursor: "grabbing" }}
       transition={{ type: "spring", stiffness: 360, damping: 28 }}
       className={`cursor-grab ${shellClass(variant, className)}`}
     >

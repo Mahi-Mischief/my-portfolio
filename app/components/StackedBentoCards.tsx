@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Gamepad2, LayoutGrid, Trophy } from "lucide-react";
+import { Gamepad2, LayoutGrid, Trophy, Code, Microscope } from "lucide-react";
 
-export type CaseStudyId = "nexora" | "tobi" | "unity";
+export type CaseStudyId = "tobi" | "nexora" | "unity";
+
+interface StackedBentoCardsProps {
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+  onOpenCaseStudy?: () => void;
+}
 
 const CASES: Record<
   CaseStudyId,
@@ -15,29 +21,33 @@ const CASES: Record<
     tech: string;
     accentIcon: "trophy" | "grid" | "gamepad";
     fbla?: { line1: string; line2: string };
+    imageSrc: string;
   }
 > = {
+  tobi: {
+    num: "01",
+    clientMono: "Client Tobi-To-Do (STUDENT PLANNER)",
+    wireLabel: "STUDENT PLANNER UI",
+    tech: "NEXT.JS | OPEN AI | PRISMA",
+    accentIcon: "grid",
+    imageSrc: "/assets/tobi-todo.png",
+  },
   nexora: {
-    num: "03",
+    num: "02",
     clientMono: "Client Nexora (AI AGENT APP)",
     wireLabel: "AI AGENT APP",
     tech: "FLUTTER | EXPRESS JS | SQL",
     accentIcon: "trophy",
     fbla: { line1: "FBLA", line2: "FBLA State Win" },
-  },
-  tobi: {
-    num: "02",
-    clientMono: "Client Tobi-To-Do (STUDENT PLANNER)",
-    wireLabel: "STUDENT PLANNER UI",
-    tech: "NEXT.JS | OPEN AI | PRISMA",
-    accentIcon: "grid",
+    imageSrc: "/assets/nexora.png",
   },
   unity: {
-    num: "01",
+    num: "03",
     clientMono: "Unity Game Mechanics (IMMERSIVE WORLDS)",
     wireLabel: "GAME MECHANICS",
     tech: "C# | UNITY | BLENDER",
     accentIcon: "gamepad",
+    imageSrc: "/assets/unity.png",
   },
 };
 
@@ -51,7 +61,7 @@ function AccentIcon({ type }: { type: "trophy" | "grid" | "gamepad" }) {
   return <Gamepad2 className="h-14 w-14 text-emerald-600/90" strokeWidth={1.35} />;
 }
 
-function BentoFace({ id }: { id: CaseStudyId }) {
+function BentoFace({ id, onOpenCaseStudy }: { id: CaseStudyId; onOpenCaseStudy?: () => void }) {
   const c = CASES[id];
 
   return (
@@ -70,6 +80,12 @@ function BentoFace({ id }: { id: CaseStudyId }) {
 
       <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-[1fr_min(28vw,9.5rem)] sm:items-stretch">
         <div className="relative flex min-h-[11rem] items-center justify-center overflow-hidden rounded-xl border border-zinc-300 bg-gradient-to-br from-zinc-200 to-zinc-300/90 sm:min-h-[13rem]">
+          <img 
+            src={c.imageSrc} 
+            alt={`${c.wireLabel} preview`}
+            className="absolute inset-0 w-full h-full object-cover rounded-xl"
+            style={{ opacity: 0.7 }}
+          />
           <div
             className="pointer-events-none absolute inset-0 opacity-40"
             style={{
@@ -99,7 +115,12 @@ function BentoFace({ id }: { id: CaseStudyId }) {
         <button
           type="button"
           className="justify-self-center rounded-md border-2 border-zinc-900 bg-white px-5 py-2.5 font-mono-jet text-[10px] font-bold uppercase tracking-widest text-zinc-900 transition hover:bg-zinc-900 hover:text-white"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (id === "nexora" && onOpenCaseStudy) {
+              onOpenCaseStudy();
+            }
+          }}
         >
           READ CASE STUDY
         </button>
@@ -125,10 +146,25 @@ function BentoFace({ id }: { id: CaseStudyId }) {
   );
 }
 
-export default function StackedBentoCards() {
-  const [stack, setStack] = useState<CaseStudyId[]>(["unity", "tobi", "nexora"]);
+export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenCaseStudy }: StackedBentoCardsProps) {
+  const allCases: CaseStudyId[] = ["tobi", "nexora", "unity"];
+  
+  const [stack, setStack] = useState<CaseStudyId[]>(["tobi", "nexora", "unity"]);
+
+  // Sync stack with activeIndex
+  useEffect(() => {
+    const activeCase = allCases[activeIndex];
+    if (activeCase && stack[stack.length - 1] !== activeCase) {
+      setStack((prev) => {
+        const rest = prev.filter((x) => x !== activeCase);
+        return [...rest, activeCase];
+      });
+    }
+  }, [activeIndex]);
 
   const bringToFront = (id: CaseStudyId) => {
+    const index = allCases.indexOf(id);
+    setActiveIndex(index);
     setStack((prev) => {
       const rest = prev.filter((x) => x !== id);
       return [...rest, id];
@@ -137,36 +173,63 @@ export default function StackedBentoCards() {
 
   return (
     <div className="relative mx-auto w-full max-w-4xl px-3 sm:px-4">
-      <div className="relative h-[min(520px,118vw)] sm:h-[480px]">
-        {stack.map((id, i) => {
-          const depthFromFront = stack.length - 1 - i;
-          const offsetY = depthFromFront * 22;
-          const scale = 1 - depthFromFront * 0.034;
-          const rotate = depthFromFront * -0.9;
+      <div className="relative h-[min(520px,118vw)] sm:h-[480px] flex items-center justify-center">
+        {allCases.map((id, i) => {
+          const isActive = i === activeIndex;
+          const position = i - activeIndex;
+          
+          // Calculate positions for carousel effect
+          let x = 0;
+          let scale = 1;
+          let rotate = 0;
+          let zIndex = 10;
+          
+          if (position === 0) {
+            // Center card (active)
+            scale = 1;
+            zIndex = 30;
+          } else if (position === -1) {
+            // Left card
+            x = -320;
+            scale = 0.85;
+            rotate = -5;
+            zIndex = 20;
+          } else if (position === 1) {
+            // Right card
+            x = 320;
+            scale = 0.85;
+            rotate = 5;
+            zIndex = 20;
+          } else {
+            // Cards further away
+            x = position > 1 ? 400 : -400;
+            scale = 0.7;
+            rotate = position > 1 ? 8 : -8;
+            zIndex = 10;
+          }
 
           return (
             <motion.div
               key={id}
-              className="absolute inset-x-0 top-0 mx-auto w-full max-w-3xl cursor-pointer"
-              style={{ zIndex: 10 + i, transformOrigin: "50% 0%" }}
-              initial={false}
+              className="absolute w-full max-w-3xl cursor-pointer"
+              style={{ zIndex, transformOrigin: "center" }}
               animate={{
-                y: offsetY,
+                x,
                 scale,
                 rotate,
               }}
-              transition={{ type: "spring", stiffness: 260, damping: 30 }}
-              onClick={() => bringToFront(id)}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              onClick={() => setActiveIndex(i)}
               role="button"
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  bringToFront(id);
+                  setActiveIndex(i);
                 }
               }}
             >
-              <BentoFace id={id} />
+              <BentoFace id={id} onOpenCaseStudy={onOpenCaseStudy} />
             </motion.div>
           );
         })}

@@ -4,12 +4,12 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 
 const FULL_TITLE = "MAHI DESHPANDE";
 /** Pixels: letters within this radius ramp toward max weight */
-const PROXIMITY_RADIUS = 92;
+const PROXIMITY_RADIUS = 120;
 const TITLE_LETTERS = FULL_TITLE.split("");
 
-/** Base / peak weights (Playfair loads 700–900 in layout for smooth ramp) */
-const WEIGHT_BASE = 700;
-const WEIGHT_PEAK = 900;
+/** Base / peak weights (Playfair loads 400–900 in layout for smooth ramp) */
+const WEIGHT_BASE = 400;
+const WEIGHT_PEAK = 700;
 
 type HeroGlowingTitleProps = {
   /** Pointer position in viewport (client) coordinates */

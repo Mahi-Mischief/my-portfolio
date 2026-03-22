@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Caveat, JetBrains_Mono, Playfair_Display } from "next/font/google";
+import { MotionConfig } from "framer-motion";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -34,7 +35,11 @@ export default function RootLayout({
       lang="en"
       className={`${playfairDisplay.variable} ${jetBrainsMono.variable} ${caveat.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <MotionConfig>
+          {children}
+        </MotionConfig>
+      </body>
     </html>
   );
 }
