@@ -31,7 +31,7 @@ type StickyNoteProps = {
 };
 
 const shellClass = (variant: StickyVariant, className: string) =>
-  `relative aspect-square w-[220px] select-none rounded-[3px] border p-4 text-sm leading-snug sm:w-[240px] sm:p-5 ${variants[variant]} ${className}`;
+  `relative aspect-square w-[220px] select-none rounded-[3px] border p-4 text-sm leading-snug sm:w-[240px] sm:p-5 ${variant === 'lab' ? 'w-[242px] sm:w-[264px]' : ''} ${variants[variant]} ${className}`;
 
 export default function StickyNote({
   children,

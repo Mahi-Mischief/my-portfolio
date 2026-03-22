@@ -17,7 +17,7 @@ import HobbyistWorkbench from "./components/HobbyistWorkbench";
 const ASSETS = {
   nexora: "/assets/polaroid-nexora.png",
   tobiTodo: "/assets/polaroid-tobi-todo.png",
-  unity: "/assets/polaroid-immersive-worlds.svg",
+  unity: "/assets/unity-game.png",
   portrait: "/assets/polaroid-headshot.png",
   nextjs: "/assets/polaroid-nextjs-ai.svg",
   // Logo stickers for personality
@@ -46,11 +46,11 @@ function getRandomRotation() {
 
 const LAYOUT = {
   /** Adjusted positions per user specifications */
-  nexora: { left: 20, top: 22, rotate: -8 }, // Moved 4% right from 16% to 20%
+  nexora: { left: 24, top: 22, rotate: -8 }, // Moved 2% right from 22% to 24%
   portrait: { left: 50, top: 20, rotate: 2 }, // Moved down 5% from 15% to 20%
   tobi: { left: 78, top: 20, rotate: 6 }, // Moved down from 10% to 20%
   unity: { left: 15, top: 59, rotate: -12 }, // Moved 1% up from 60% to 59%
-  fbla: { left: 88, top: 75, rotate: 4 }, // Moved further right to 88% (next to navigation)
+  fbla: { left: 80, top: 75, rotate: 4 }, // Moved 5% left from 85% to 80%
   gt: { left: 26, top: 84, rotate: 0 }, // Moved 1% left from 27% to 26%
   /** Tech Logo Scatter - Adjusted positions */
   stickers: {
@@ -119,20 +119,22 @@ export default function Home() {
           "radial-gradient(circle, rgb(24 24 27 / 0.17) 1px, transparent 1px)",
         backgroundSize: "26px 26px",
         pointerEvents: "none", // Make main container passive to clicks
-        border: "2px solid red", // DEBUG: Show main container boundaries
       }}
     >
       <MouseGlowLayer glow={glow} subtle className="z-[-1]" />
 
-      <div className="pointer-events-none absolute left-4 top-4 z-[10] sm:left-6 sm:top-6" style={{ border: "2px solid red" }}>
+      <div className="pointer-events-none absolute left-4 top-4 z-[10] sm:left-6 sm:top-6">
         <StatusBadge />
       </div>
 
       {/* Default positions = reference screenshot (% of main); drag anywhere */}
-      <div className="absolute inset-0 z-[50] pointer-events-auto" style={{ border: "2px solid blue" }}>
+      <div className="absolute inset-0 z-[50] pointer-events-auto">
         <div
           className="pointer-events-auto absolute"
-          style={slotStyle(LAYOUT.nexora.left, LAYOUT.nexora.top)}
+          style={{
+            ...slotStyle(LAYOUT.nexora.left, LAYOUT.nexora.top),
+            transform: `translate(-50%, -50%) scale(${HALO_SCALE * 1.05}) rotate(${LAYOUT.nexora.rotate}deg)`
+          }}
         >
           <Polaroid
             draggable={true}
@@ -186,7 +188,7 @@ export default function Home() {
             imageSrc={ASSETS.unity}
             imageAlt="Unity Game"
             rotation={LAYOUT.unity.rotate}
-            caption="Immersive Worlds & Game Mechanics"
+            caption="Blind Spot: A 3D Immersive Unity Game"
           />
         </div>
 
@@ -196,9 +198,7 @@ export default function Home() {
         >
           <StickyNote variant="terminal" draggable={true} rotation={LAYOUT.fbla.rotate}>
             <div className="font-mono-jet text-[12px] leading-tight">
-              <div>NEXORA: FBLA State Winner // AI Agent Framework</div>
-              <div>TOBI-TO-DO: Next.js + OpenAI Student Planner</div>
-              <div>UNITY_DRIVE: C# Physics & Immersive World-Building</div>
+              <div>Current Involvement: <br /> Member of Computer Science Club <br /> Member of Data Science Club <br /> Member of National Technical Honors Society <br /> HackForsyth Hackathhon Participant <br /> HackGwinnet Hackathon Participant</div>
             </div>
           </StickyNote>
         </div>
@@ -213,11 +213,10 @@ export default function Home() {
                 R
               </div>
               <div className="font-mono-jet text-[12px] leading-tight">
-                <div>RESEARCH: Interactive PPG Heart Rate Monitor</div>
-                <div>PLATFORM: Python-based Google Colab Module</div>
-                <div>TECH: OpenCV + NumPy Signal Processing</div>
+                <div>RESEARCH WITH GEORGIA TECH: Interactive PPG Heart Rate Monitor<br /></div>
+                <div>PLATFORM: Python-based Google Colab Module<br /></div>
+                <div>TECH: OpenCV + NumPy Signal Processing<br /></div>
                 <div>FOCUS: Real-time Fingertip Video Analysis</div>
-                <div>EDU: High School Engineering Curriculum</div>
               </div>
             </div>
           </StickyNote>
@@ -382,14 +381,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-[10] flex flex-col items-center justify-center px-4 text-center" style={{ border: "2px solid green" }}>
+      <div className="pointer-events-none absolute inset-0 z-[10] flex flex-col items-center justify-center px-4 text-center">
         <HeroGlowingTitle
           clientX={pointer.cx}
           clientY={pointer.cy}
           className="text-balance text-[clamp(1.75rem,6vw,80px)]"
         />
         <p className="font-mono-jet mt-5 max-w-2xl text-[10px] leading-relaxed text-zinc-600 sm:mt-6 sm:text-xs md:text-sm">
-          [SYSTEM: ACTIVE] // West Forsyth High School &apos;28 // Full Stack Developer + Creative Artist + AI Enthusiast
+          [SYSTEM: ACTIVE] // West Forsyth High School &apos;27 // Full Stack Developer + Creative Artist + AI Enthusiast
         </p>
       </div>
 

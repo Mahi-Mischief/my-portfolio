@@ -75,6 +75,11 @@ export default function Sticker({
         cursor: "grabbing",
         rotate: initialRotation + 2
       }}
+      whileHover={{
+        scale: 1.05,
+        rotate: initialRotation + 1,
+        transition: { duration: 0.2 }
+      }}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className="cursor-grab inline-block"
     >

@@ -37,7 +37,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
 
       <div className="relative min-h-[min(520px,70vh)]">
         <div className="pointer-events-none absolute inset-0">
-          <div className="pointer-events-auto absolute left-[2%] top-[4%] sm:left-[4%]">
+          <div className="pointer-events-auto absolute left-[0%] top-[4%] sm:left-[2%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(0)} // Unity project
@@ -51,7 +51,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute right-[4%] top-[2%] sm:right-[8%]">
+          <div className="pointer-events-auto absolute right-[9%] top-[2%] sm:right-[13%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(2)} // Nexora project
@@ -65,7 +65,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute bottom-[18%] left-[6%] sm:bottom-[22%]">
+          <div className="pointer-events-auto absolute bottom-[6%] left-[21%] sm:bottom-[10%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(1)} // Tobi project
@@ -79,7 +79,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-          <div className="pointer-events-auto absolute bottom-[8%] right-[3%] sm:bottom-[12%] sm:right-[6%]">
+          <div className="pointer-events-auto absolute right-[2%] bottom-[8%] sm:right-[12%] sm:bottom-[12%]">
             <div 
               className="cursor-pointer transition-transform hover:scale-105"
               onClick={() => handlePolaroidClick(0)} // Unity project
@@ -93,8 +93,7 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
               />
             </div>
           </div>
-
-          <div className="pointer-events-auto absolute left-[28%] top-[28%] sm:left-[32%] sm:top-[26%]">
+          <div className="pointer-events-auto absolute left-[38%] top-[28%] sm:left-[42%] sm:top-[26%]">
             <StickyNote variant="amber" rotation={-2.2} handwritten>
               Working on physics logic research for Tetris clone
             </StickyNote>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, Github, Home, Linkedin, Mail, FolderOpen } from "lucide-react";
+import { Github, Home, Linkedin, Mail, FolderOpen } from "lucide-react";
 
 type DockActive = "home" | "projects";
 
@@ -20,7 +20,7 @@ function DockLink({
   const className = `flex min-w-[48px] flex-col items-center gap-1 rounded-xl px-2 py-1.5 transition sm:min-w-[56px] sm:px-2.5 sm:py-2 ${
     isActive
       ? "bg-white/55 text-zinc-900"
-      : "text-zinc-700 hover:bg-white/45 hover:text-zinc-900"
+      : "text-zinc-700 hover:bg-zinc-900 hover:text-white"
   }`;
 
   const labelEl = (
@@ -61,9 +61,6 @@ export default function GlassDock({ active = "home" }: { active?: DockActive }) 
       </DockLink>
       <DockLink href="/projects" label="Projects" isActive={active === "projects"}>
         <FolderOpen className="h-5 w-5 sm:h-[22px] sm:w-[22px]" strokeWidth={1.85} />
-      </DockLink>
-      <DockLink href="#resume" label="Resume">
-        <FileText className="h-5 w-5 sm:h-[22px] sm:w-[22px]" strokeWidth={1.85} />
       </DockLink>
       <DockLink href="https://github.com/Mahi-Mischief" label="GitHub">
         <Github className="h-5 w-5 sm:h-[22px] sm:w-[22px]" strokeWidth={1.85} />

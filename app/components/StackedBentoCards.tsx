@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Gamepad2, LayoutGrid, Trophy, Code, Microscope } from "lucide-react";
+import { Gamepad2, LayoutGrid, Trophy, Code, Microscope, Calendar, CheckSquare, X } from "lucide-react";
 
 export type CaseStudyId = "tobi" | "nexora" | "unity";
 
@@ -12,6 +12,25 @@ interface StackedBentoCardsProps {
   onOpenCaseStudy?: () => void;
 }
 
+function DescriptionModal({ isOpen, onClose, title, description }: { isOpen: boolean; onClose: () => void; title: string; description: string }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="relative mx-4 max-w-lg rounded-xl border border-zinc-200 bg-white p-6 shadow-xl">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600"
+        >
+          <X className="h-4 w-4" />
+        </button>
+        <h3 className="mb-4 text-lg font-semibold text-zinc-900">{title}</h3>
+        <p className="text-sm leading-relaxed text-zinc-600">{description}</p>
+      </div>
+    </div>
+  );
+}
+
 const CASES: Record<
   CaseStudyId,
   {
@@ -19,39 +38,49 @@ const CASES: Record<
     clientMono: string;
     wireLabel: string;
     tech: string;
-    accentIcon: "trophy" | "grid" | "gamepad";
+    accentIcon: "calendar" | "checksquare" | "trophy" | "grid" | "gamepad";
     fbla?: { line1: string; line2: string };
     imageSrc: string;
+    description: string;
   }
 > = {
   tobi: {
     num: "01",
-    clientMono: "Client Tobi-To-Do (STUDENT PLANNER)",
+    clientMono: "App: Tobi-To-Do (STUDENT DASHBOARD)",
     wireLabel: "STUDENT PLANNER UI",
-    tech: "NEXT.JS | OPEN AI | PRISMA",
-    accentIcon: "grid",
-    imageSrc: "/assets/tobi-todo.png",
+    tech: "FLUTTER | BYCRYPT | POSTGRESQL",
+    accentIcon: "calendar",
+    imageSrc: "/assets/tobitododisplay.png",
+    description: "A comprehensive student dashboard application built with Flutter, featuring task management, scheduling, and productivity tools. Includes secure authentication with bcrypt and PostgreSQL database integration."
   },
   nexora: {
     num: "02",
-    clientMono: "Client Nexora (AI AGENT APP)",
+    clientMono: "App: Nexora (AI AGENT APP FOR FBLA)",
     wireLabel: "AI AGENT APP",
     tech: "FLUTTER | EXPRESS JS | SQL",
     accentIcon: "trophy",
     fbla: { line1: "FBLA", line2: "FBLA State Win" },
-    imageSrc: "/assets/nexora.png",
+    imageSrc: "/assets/nexora banner.png",
+    description: "An innovative AI agent application developed for the FBLA competition. Features intelligent task automation, natural language processing, and user-friendly interface built with Flutter and Express.js."
   },
   unity: {
     num: "03",
-    clientMono: "Unity Game Mechanics (IMMERSIVE WORLDS)",
+    clientMono: "Unity Game: Blind Spot (IMMERSIVE WORLD)",
     wireLabel: "GAME MECHANICS",
     tech: "C# | UNITY | BLENDER",
     accentIcon: "gamepad",
-    imageSrc: "/assets/unity.png",
+    imageSrc: "/assets/BLINDSPOTBANNER.png",
+    description: "Immersive game mechanics and interactive worlds built with Unity and C#. Features complex physics systems, environmental storytelling, and 3D modeling with Blender integration."
   },
 };
 
-function AccentIcon({ type }: { type: "trophy" | "grid" | "gamepad" }) {
+function AccentIcon({ type }: { type: "calendar" | "checksquare" | "trophy" | "grid" | "gamepad" }) {
+  if (type === "calendar") {
+    return <Calendar className="h-14 w-14 text-blue-500 drop-shadow-sm" strokeWidth={1.35} />;
+  }
+  if (type === "checksquare") {
+    return <CheckSquare className="h-14 w-14 text-green-500 drop-shadow-sm" strokeWidth={1.35} />;
+  }
   if (type === "trophy") {
     return <Trophy className="h-14 w-14 text-amber-500 drop-shadow-sm" strokeWidth={1.35} />;
   }
@@ -61,7 +90,11 @@ function AccentIcon({ type }: { type: "trophy" | "grid" | "gamepad" }) {
   return <Gamepad2 className="h-14 w-14 text-emerald-600/90" strokeWidth={1.35} />;
 }
 
-function BentoFace({ id, onOpenCaseStudy }: { id: CaseStudyId; onOpenCaseStudy?: () => void }) {
+function BentoFace({ id, onOpenCaseStudy, onOpenDescription }: { 
+  id: CaseStudyId; 
+  onOpenCaseStudy?: () => void;
+  onOpenDescription: (id: CaseStudyId) => void;
+}) {
   const c = CASES[id];
 
   return (
@@ -84,22 +117,7 @@ function BentoFace({ id, onOpenCaseStudy }: { id: CaseStudyId; onOpenCaseStudy?:
             src={c.imageSrc} 
             alt={`${c.wireLabel} preview`}
             className="absolute inset-0 w-full h-full object-cover rounded-xl"
-            style={{ opacity: 0.7 }}
           />
-          <div
-            className="pointer-events-none absolute inset-0 opacity-40"
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, rgb(63 63 70 / 0.12) 1px, transparent 1px),
-                linear-gradient(to bottom, rgb(63 63 70 / 0.12) 1px, transparent 1px)
-              `,
-              backgroundSize: "20px 20px",
-            }}
-          />
-          <div className="absolute inset-5 rounded-lg border border-dashed border-zinc-500/35" />
-          <p className="relative z-[1] font-mono-jet text-xs font-medium uppercase tracking-[0.2em] text-zinc-600 sm:text-sm">
-            {c.wireLabel}
-          </p>
         </div>
 
         <div className="flex aspect-square w-full max-w-[9.5rem] shrink-0 items-center justify-center justify-self-center rounded-xl border border-zinc-200 bg-gradient-to-b from-zinc-50 to-zinc-100 shadow-inner sm:max-w-none sm:justify-self-end">
@@ -119,28 +137,23 @@ function BentoFace({ id, onOpenCaseStudy }: { id: CaseStudyId; onOpenCaseStudy?:
             e.stopPropagation();
             if (id === "nexora" && onOpenCaseStudy) {
               onOpenCaseStudy();
+            } else if (id === "tobi" || id === "unity") {
+              // Tobi and Unity explore functionality can be added later
             }
           }}
         >
-          READ CASE STUDY
+          {id === "nexora" ? "Explore Nexora" : id === "tobi" ? `Explore ${CASES[id].clientMono.split(' ')[1]}` : id === "unity" ? "Explore Blind Spot" : "READ CASE STUDY"}
         </button>
 
-        {c.fbla ? (
-          <div className="justify-self-end rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-center shadow-sm lg:min-w-[8.5rem]">
-            <p className="font-mono-jet text-[10px] font-bold uppercase tracking-widest text-zinc-800">
-              {c.fbla.line1}
-            </p>
-            <p className="mt-1 font-mono-jet text-[10px] font-semibold uppercase tracking-wide text-zinc-600">
-              {c.fbla.line2}
-            </p>
-          </div>
-        ) : (
-          <div className="hidden justify-self-end rounded-xl border border-dashed border-zinc-200 bg-zinc-50/60 px-4 py-3 text-center lg:block lg:min-w-[7.5rem]">
-            <p className="font-mono-jet text-[9px] font-semibold uppercase tracking-wide text-zinc-400">
-              Case file
-            </p>
-          </div>
-        )}
+        <button
+          type="button"
+          className="justify-self-end rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-center shadow-sm lg:min-w-[8.5rem] hover:bg-zinc-100 transition"
+          onClick={() => onOpenDescription(id)}
+        >
+          <p className="font-mono-jet text-[10px] font-bold uppercase tracking-widest text-zinc-800">
+            View Description
+          </p>
+        </button>
       </div>
     </div>
   );
@@ -150,6 +163,10 @@ export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenC
   const allCases: CaseStudyId[] = ["tobi", "nexora", "unity"];
   
   const [stack, setStack] = useState<CaseStudyId[]>(["tobi", "nexora", "unity"]);
+  const [descriptionModal, setDescriptionModal] = useState<{ isOpen: boolean; projectId: CaseStudyId | null }>({
+    isOpen: false,
+    projectId: null
+  });
 
   // Sync stack with activeIndex
   useEffect(() => {
@@ -169,6 +186,14 @@ export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenC
       const rest = prev.filter((x) => x !== id);
       return [...rest, id];
     });
+  };
+
+  const handleOpenDescription = (id: CaseStudyId) => {
+    setDescriptionModal({ isOpen: true, projectId: id });
+  };
+
+  const handleCloseDescription = () => {
+    setDescriptionModal({ isOpen: false, projectId: null });
   };
 
   return (
@@ -229,11 +254,22 @@ export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenC
                 }
               }}
             >
-              <BentoFace id={id} onOpenCaseStudy={onOpenCaseStudy} />
+              <BentoFace 
+                id={id} 
+                onOpenCaseStudy={onOpenCaseStudy}
+                onOpenDescription={handleOpenDescription}
+              />
             </motion.div>
           );
         })}
       </div>
+      
+      <DescriptionModal
+        isOpen={descriptionModal.isOpen && descriptionModal.projectId !== null}
+        onClose={handleCloseDescription}
+        title={descriptionModal.projectId ? `${CASES[descriptionModal.projectId].clientMono}` : ""}
+        description={descriptionModal.projectId ? CASES[descriptionModal.projectId].description : ""}
+      />
     </div>
   );
 }
