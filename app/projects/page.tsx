@@ -1,8 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Siren } from "lucide-react";
 import GlassDock from "../components/GlassDock";
 import HobbyistWorkbench from "../components/HobbyistWorkbench";
 import MouseGlowLayer from "../components/MouseGlowLayer";
@@ -10,8 +9,9 @@ import StackedBentoCards from "../components/StackedBentoCards";
 import ProjectNavigation from "../components/ProjectNavigation";
 import NexoraCaseStudy from "../components/NexoraCaseStudy";
 import FocusModal from "../components/FocusModal";
+import { Siren } from "lucide-react";
 
-export default function ProjectsPage() {
+function ProjectsPageContent() {
   const searchParams = useSearchParams();
   const [glow, setGlow] = useState({ x: 50, y: 38 });
   const [activeIndex, setActiveIndex] = useState(0); // Default to tobi (index 0)
@@ -28,7 +28,8 @@ export default function ProjectsPage() {
       console.log('Parsed project index:', projectIndex);
       if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex <= 2) {
         console.log('Setting active index to:', projectIndex);
-        setActiveIndex(projectIndex);
+        // Use setTimeout to avoid synchronous setState in effect
+        setTimeout(() => setActiveIndex(projectIndex), 0);
       }
     }
   }, [searchParams]);
@@ -213,5 +214,17 @@ export default function ProjectsPage() {
 
       <GlassDock active="projects" />
     </main>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-zinc-50 flex items-center justify-center">
+        <div className="text-zinc-500">Loading projects...</div>
+      </div>
+    }>
+      <ProjectsPageContent />
+    </Suspense>
   );
 }
