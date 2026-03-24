@@ -10,6 +10,8 @@ interface StackedBentoCardsProps {
   activeIndex: number;
   setActiveIndex: (index: number) => void;
   onOpenCaseStudy?: () => void;
+  onOpenTobiModal?: () => void;
+  onOpenBlindSpotModal?: () => void;
 }
 
 function DescriptionModal({ isOpen, onClose, title, description }: { isOpen: boolean; onClose: () => void; title: string; description: string }) {
@@ -90,10 +92,12 @@ function AccentIcon({ type }: { type: "calendar" | "checksquare" | "trophy" | "g
   return <Gamepad2 className="h-14 w-14 text-emerald-600/90" strokeWidth={1.35} />;
 }
 
-function BentoFace({ id, onOpenCaseStudy, onOpenDescription }: { 
+function BentoFace({ id, onOpenCaseStudy, onOpenDescription, onOpenTobiModal, onOpenBlindSpotModal }: { 
   id: CaseStudyId; 
   onOpenCaseStudy?: () => void;
   onOpenDescription: (id: CaseStudyId) => void;
+  onOpenTobiModal?: () => void;
+  onOpenBlindSpotModal?: () => void;
 }) {
   const c = CASES[id];
 
@@ -137,8 +141,10 @@ function BentoFace({ id, onOpenCaseStudy, onOpenDescription }: {
             e.stopPropagation();
             if (id === "nexora" && onOpenCaseStudy) {
               onOpenCaseStudy();
-            } else if (id === "tobi" || id === "unity") {
-              // Tobi and Unity explore functionality can be added later
+            } else if (id === "tobi" && onOpenTobiModal) {
+              onOpenTobiModal();
+            } else if (id === "unity" && onOpenBlindSpotModal) {
+              onOpenBlindSpotModal();
             }
           }}
         >
@@ -159,7 +165,7 @@ function BentoFace({ id, onOpenCaseStudy, onOpenDescription }: {
   );
 }
 
-export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenCaseStudy }: StackedBentoCardsProps) {
+export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenCaseStudy, onOpenTobiModal, onOpenBlindSpotModal }: StackedBentoCardsProps) {
   const allCases: CaseStudyId[] = ["tobi", "nexora", "unity"];
   
   const [stack, setStack] = useState<CaseStudyId[]>(["tobi", "nexora", "unity"]);
@@ -258,6 +264,8 @@ export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenC
                 id={id} 
                 onOpenCaseStudy={onOpenCaseStudy}
                 onOpenDescription={handleOpenDescription}
+                onOpenTobiModal={onOpenTobiModal}
+                onOpenBlindSpotModal={onOpenBlindSpotModal}
               />
             </motion.div>
           );

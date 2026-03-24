@@ -20,6 +20,8 @@ type PolaroidProps = {
   dragConstraints?: MotionDragConstraints;
   /** When false, render a static card (no drag). Default true. */
   draggable?: boolean;
+  /** Optional click handler for the entire polaroid */
+  onClick?: () => void;
 };
 
 const figureClass = (compact: boolean, className: string) =>
@@ -39,6 +41,7 @@ export default function Polaroid({
   whileDragZIndex = 40,
   dragConstraints,
   draggable = true,
+  onClick,
 }: PolaroidProps) {
   const initialRotation = useMemo(
     () => (rotation !== undefined ? rotation : Math.random() * 8 - 4),
@@ -52,8 +55,12 @@ export default function Polaroid({
         <img
           src={imageSrc}
           alt={imageAlt}
-          className="h-full w-full object-cover scale-95"
+          className="h-full w-full object-cover scale-95 cursor-pointer hover:scale-100 transition-transform"
           draggable={false}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onClick) onClick();
+          }}
         />
       </div>
 
@@ -76,7 +83,7 @@ export default function Polaroid({
 
   return (
     <motion.figure
-      drag
+      drag={draggable}
       dragMomentum={false}
       dragConstraints={dragConstraints}
       dragElastic={0.06}
@@ -85,6 +92,7 @@ export default function Polaroid({
       whileDrag={{ scale: 1.02, zIndex: 100, cursor: "grabbing" }}
       transition={{ type: "spring", stiffness: 340, damping: 26 }}
       className={`cursor-grab ${figureClass(compact, className)}`}
+      onClick={onClick}
     >
       {inner}
     </motion.figure>

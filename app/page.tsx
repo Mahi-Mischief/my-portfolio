@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import HeroGlowingTitle from "./components/HeroGlowingTitle";
 import MouseGlowLayer from "./components/MouseGlowLayer";
 import Polaroid from "./components/Polaroid";
@@ -9,6 +10,7 @@ import StatusBadge from "./components/StatusBadge";
 import Sticker from "./components/Sticker";
 import GlassDock from "./components/GlassDock";
 import HobbyistWorkbench from "./components/HobbyistWorkbench";
+import FocusModal from "./components/FocusModal";
 
 /**
  * Home — default layout matches reference screenshot (viewport %, origin = card center).
@@ -86,13 +88,32 @@ function slotStyle(leftPct: number, topPct: number) {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [glow, setGlow] = useState({ x: 50, y: 50 });
   const [pointer, setPointer] = useState({ cx: 0, cy: 0 });
+  const [focusModal, setFocusModal] = useState<{ isOpen: boolean; type: 'about' | null }>({
+    isOpen: false,
+    type: null
+  });
 
   useEffect(() => {
     const w = window.innerWidth;
     const h = window.innerHeight;
     setPointer({ cx: w / 2, cy: h / 2 });
+  }, []);
+
+  const handleProjectCardClick = useCallback((project: 'nexora' | 'tobi' | 'unity') => {
+    const projectIndex = project === 'nexora' ? 1 : project === 'tobi' ? 0 : 2; // nexora=1, tobi=0, unity=2
+    router.push(`/projects?project=${projectIndex}`);
+  }, [router]);
+
+  const handleAboutMeClick = useCallback(() => {
+    setFocusModal({ isOpen: true, type: 'about' });
+  }, []);
+
+  const handleCloseFocusModal = useCallback(() => {
+    console.log('Home page: Closing focus modal');
+    setFocusModal({ isOpen: false, type: null });
   }, []);
 
   useEffect(() => {
@@ -146,6 +167,7 @@ export default function Home() {
                 Nexora <span className="text-zinc-600">FBLA 5th Place State Winner</span>
               </>
             }
+            onClick={() => handleProjectCardClick('nexora')}
           />
         </div>
 
@@ -159,6 +181,7 @@ export default function Home() {
             imageAlt="Portrait"
             rotation={LAYOUT.portrait.rotate}
             caption="Artistic Headshot"
+            onClick={handleAboutMeClick}
           />
         </div>
 
@@ -176,6 +199,7 @@ export default function Home() {
                 Tobi-To-Do <span className="text-zinc-600">Next.js + AI Student Planner</span>
               </>
             }
+            onClick={() => handleProjectCardClick('tobi')}
           />
         </div>
 
@@ -189,6 +213,7 @@ export default function Home() {
             imageAlt="Unity Game"
             rotation={LAYOUT.unity.rotate}
             caption="Blind Spot: A 3D Immersive Unity Game"
+            onClick={() => handleProjectCardClick('unity')}
           />
         </div>
 
@@ -196,8 +221,8 @@ export default function Home() {
           className="pointer-events-auto absolute"
           style={slotStyle(LAYOUT.fbla.left, LAYOUT.fbla.top)}
         >
-          <StickyNote variant="terminal" draggable={true} rotation={LAYOUT.fbla.rotate}>
-            <div className="font-mono-jet text-[12px] leading-tight">
+          <StickyNote variant="terminal" draggable={true} rotation={LAYOUT.fbla.rotate} className="w-[280px] h-[280px] sm:w-[300px] sm:h-[300px]">
+            <div className="font-mono-jet text-[14px] leading-relaxed">
               <div>Current Involvement: <br /> Member of Computer Science Club <br /> Member of Data Science Club <br /> Member of National Technical Honors Society <br /> HackForsyth Hackathhon Participant <br /> HackGwinnet Hackathon Participant</div>
             </div>
           </StickyNote>
@@ -392,10 +417,30 @@ export default function Home() {
         </p>
       </div>
 
-      {/* <HobbyistWorkbench /> */}
+      {/* Focus Modal for About Me - Rendered after GlassDock for proper z-index */}
+      {focusModal.isOpen && focusModal.type === 'about' && (
+        <FocusModal
+          isOpen={focusModal.isOpen}
+          onClose={handleCloseFocusModal}
+          item={{
+            id: 'about-me',
+            title: 'Mahi Deshpande',
+            type: 'polaroid',
+            description: 'Full Stack Developer + Creative Artist + AI Enthusiast. West Forsyth High School \'27 with a passion for building innovative solutions and expressing creativity through multiple mediums.',
+            technicalDetails: [
+              'EDUCATION: West Forsyth High School \'27',
+              'SPECIALIZATION: Full Stack Development, AI/ML',
+              'EXPERTISE: React, Next.js, Python, Unity 3D',
+              'INTERESTS: Game Development, Digital Art, Music',
+              'ACHIEVEMENTS: Multiple hackathon participations, club leadership'
+            ],
+            images: ['/assets/polaroid-headshot.png']
+          }}
+        />
+      )}
 
       {/* GlassDock - Master Layer - Always On Top */}
-      <div className="fixed bottom-5 left-1/2 pointer-events-auto" style={{ zIndex: 9999 }}>
+      <div className="fixed bottom-5 left-1/2 pointer-events-auto" style={{ zIndex: 100 }}>
         <GlassDock active="home" />
       </div>
     </main>

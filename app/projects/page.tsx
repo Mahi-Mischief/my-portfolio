@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Siren } from "lucide-react";
 import GlassDock from "../components/GlassDock";
 import HobbyistWorkbench from "../components/HobbyistWorkbench";
@@ -8,11 +9,29 @@ import MouseGlowLayer from "../components/MouseGlowLayer";
 import StackedBentoCards from "../components/StackedBentoCards";
 import ProjectNavigation from "../components/ProjectNavigation";
 import NexoraCaseStudy from "../components/NexoraCaseStudy";
+import FocusModal from "../components/FocusModal";
 
 export default function ProjectsPage() {
+  const searchParams = useSearchParams();
   const [glow, setGlow] = useState({ x: 50, y: 38 });
   const [activeIndex, setActiveIndex] = useState(0); // Default to tobi (index 0)
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
+  const [isTobiModalOpen, setIsTobiModalOpen] = useState(false);
+  const [isBlindSpotModalOpen, setIsBlindSpotModalOpen] = useState(false);
+
+  // Handle URL parameter for project selection
+  useEffect(() => {
+    const projectParam = searchParams.get('project');
+    console.log('Project parameter from URL:', projectParam);
+    if (projectParam !== null) {
+      const projectIndex = parseInt(projectParam, 10);
+      console.log('Parsed project index:', projectIndex);
+      if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex <= 2) {
+        console.log('Setting active index to:', projectIndex);
+        setActiveIndex(projectIndex);
+      }
+    }
+  }, [searchParams]);
 
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     const { clientX, clientY, currentTarget } = e;
@@ -40,6 +59,22 @@ export default function ProjectsPage() {
 
   const handleCloseCaseStudy = useCallback(() => {
     setIsCaseStudyOpen(false);
+  }, []);
+
+  const handleOpenTobiModal = useCallback(() => {
+    setIsTobiModalOpen(true);
+  }, []);
+
+  const handleCloseTobiModal = useCallback(() => {
+    setIsTobiModalOpen(false);
+  }, []);
+
+  const handleOpenBlindSpotModal = useCallback(() => {
+    setIsBlindSpotModalOpen(true);
+  }, []);
+
+  const handleCloseBlindSpotModal = useCallback(() => {
+    setIsBlindSpotModalOpen(false);
   }, []);
 
   // Keyboard navigation for arrow keys
@@ -115,6 +150,8 @@ export default function ProjectsPage() {
             activeIndex={activeIndex} 
             setActiveIndex={setActiveIndex}
             onOpenCaseStudy={handleOpenCaseStudy}
+            onOpenTobiModal={handleOpenTobiModal}
+            onOpenBlindSpotModal={handleOpenBlindSpotModal}
           />
           <ProjectNavigation
             currentIndex={activeIndex}
@@ -129,6 +166,50 @@ export default function ProjectsPage() {
       <HobbyistWorkbench onProjectSelect={handleProjectSelect} />
 
       <NexoraCaseStudy isOpen={isCaseStudyOpen} onClose={handleCloseCaseStudy} />
+
+      {/* Tobi Focus Modal */}
+      {isTobiModalOpen && (
+        <FocusModal
+          isOpen={isTobiModalOpen}
+          onClose={handleCloseTobiModal}
+          item={{
+            id: 'tobi-todo',
+            title: 'Tobi-To-Do',
+            type: 'polaroid',
+            description: 'AI-powered student productivity platform with intelligent planning and focus tracking.',
+            technicalDetails: [
+              'TECH: Next.js, React, TypeScript, TailwindCSS',
+              'AI: Natural Language Processing, Task Analysis',
+              'FEATURES: Smart Scheduling, Habit Tracking, Focus Tools',
+              'IMPACT: Student Productivity Enhancement Platform'
+            ],
+            images: ['/assets/polaroid-tobi-todo.png'],
+            googleDocId: 'canva.com/design/DAHE21oQC8g/qBMKefYlOOSBB-y5fw7LAQ/view?embed'
+          }}
+        />
+      )}
+
+      {/* Blind Spot Focus Modal */}
+      {isBlindSpotModalOpen && (
+        <FocusModal
+          isOpen={isBlindSpotModalOpen}
+          onClose={handleCloseBlindSpotModal}
+          item={{
+            id: 'blind-spot',
+            title: 'Blind Spot',
+            type: 'polaroid',
+            description: 'A 3D immersive Unity game experience.',
+            technicalDetails: [
+              'TECH: Unity 3D, C# Programming',
+              'ENGINE: Unity Physics, Lighting Systems',
+              'GAMEPLAY: 3D Environment Design, Player Mechanics',
+              'EXPERIENCE: Immersive Audio-Visual Design'
+            ],
+            images: ['/assets/unity-game.png'],
+            googleDocId: 'canva.com/design/DAHE2xrOmi8/ugP5hVTTgiyi7zkv6BIjHg/view?embed'
+          }}
+        />
+      )}
 
       <GlassDock active="projects" />
     </main>
