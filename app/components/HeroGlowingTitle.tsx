@@ -51,7 +51,7 @@ export default function HeroGlowingTitle({ clientX, clientY, className = "" }: H
     };
   }, []);
 
-  let letterRefIndex = 0;
+  const letterRefIndex = 0;
 
   return (
     <h1
@@ -64,9 +64,8 @@ export default function HeroGlowingTitle({ clientX, clientY, className = "" }: H
           return <span key={`sp-${i}`} className="inline-block w-[0.3em] shrink-0" aria-hidden />;
         }
 
-        const idx = letterRefIndex;
-        letterRefIndex += 1;
-        const c = centers.current[idx];
+        // Get the center for this letter from the precomputed array
+        const c = centers.current[i];
         let t = 0;
         if (c && (c.cx !== 0 || c.cy !== 0)) {
           const d = Math.hypot(clientX - c.cx, clientY - c.cy);
@@ -87,7 +86,7 @@ export default function HeroGlowingTitle({ clientX, clientY, className = "" }: H
           <span
             key={`ch-${i}`}
             ref={(el) => {
-              letterRefs.current[idx] = el;
+              letterRefs.current[i] = el;
             }}
             className="inline-block shrink-0 will-change-[font-weight,color]"
             style={style}

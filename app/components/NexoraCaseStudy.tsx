@@ -38,7 +38,8 @@ export default function NexoraCaseStudy({ isOpen, onClose }: NexoraCaseStudyProp
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const distance = Math.hypot(mousePosition.x - centerX, mousePosition.y - centerY);
-      setIsNearSticker(distance < 100);
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => setIsNearSticker(distance < 100), 0);
     }
   }, [mousePosition, isOpen]);
 

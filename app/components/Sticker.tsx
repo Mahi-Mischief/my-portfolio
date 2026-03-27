@@ -3,12 +3,17 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 
+type MotionDragConstraints =
+  | false
+  | Partial<{ left: number; right: number; top: number; bottom: number }>
+  | React.RefObject<Element | null>;
+
 type StickerProps = {
   children: React.ReactNode;
   className?: string;
   rotation?: number;
   whileDragZIndex?: number;
-  dragConstraints?: any;
+  dragConstraints?: MotionDragConstraints;
   draggable?: boolean;
   size?: "sm" | "md" | "lg" | "xl";
 };
@@ -30,7 +35,7 @@ export default function Sticker({
   size = "md"
 }: StickerProps) {
   const initialRotation = useMemo(
-    () => (rotation !== undefined ? rotation : Math.random() * 12 - 6),
+    () => rotation !== undefined ? rotation : 0, // Remove Math.random() from render
     [rotation],
   );
 

@@ -15,7 +15,7 @@ export default function DraggableSprite({
   rotation,
 }: DraggableSpriteProps) {
   const initialRotation = useMemo(
-    () => (rotation !== undefined ? rotation : Math.random() * 10 - 5),
+    () => rotation !== undefined ? rotation : 0, // Remove Math.random() from render
     [rotation],
   );
 

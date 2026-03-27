@@ -170,11 +170,27 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
   const router = useRouter();
   const [focusItem, setFocusItem] = useState<typeof HOBBYIST_ITEMS[0] | null>(null);
 
-  // Generate stable random rotations on mount
+  // Simple seeded random generator for consistent results
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+};
+
+// Generate stable random rotations on mount and shuffle items
   const itemsWithRotations = useMemo(() => {
-    return HOBBYIST_ITEMS.map(item => ({
+    const items = [...HOBBYIST_ITEMS];
+    // Use a fixed seed for consistent randomization
+    const seed = 12345; // Fixed seed for consistent results
+    
+    // Shuffle the array for random scattering
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(seededRandom(seed + i) * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    
+    return items.map((item, index) => ({
       ...item,
-      rotation: Math.random() * 8 + 2 // Random between 2-10 degrees
+      rotation: seededRandom(seed + index + 100) * 8 + 2 // Random between 2-10 degrees
     }));
   }, []);
 
@@ -234,17 +250,18 @@ export default function HobbyistWorkbench({ onProjectSelect }: HobbyistWorkbench
                       onClick={() => handleItemClick(item)}
                     />
                   ) : (
-                    <StickyNote
-                      variant={item.variant}
-                      rotation={item.rotation}
-                      draggable={false}
-                      className="w-[200px] h-[200px]"
-                    >
-                      <div className="text-center font-mono-jet text-sm leading-snug">
-                        <div className="font-bold text-zinc-900 mb-2">{item.title}</div>
-                        <div className="text-zinc-700">{item.content}</div>
-                      </div>
-                    </StickyNote>
+                    <div onClick={() => handleItemClick(item)} className="cursor-pointer">
+                      <StickyNote
+                        variant={item.variant}
+                        rotation={item.rotation}
+                        draggable={false}
+                      >
+                        <div className="text-center font-mono-jet text-sm leading-snug">
+                          <div className="font-bold text-zinc-900 mb-2">{item.title}</div>
+                          <div className="text-zinc-700">{item.content}</div>
+                        </div>
+                      </StickyNote>
+                    </div>
                   )}
                 </motion.div>
               );

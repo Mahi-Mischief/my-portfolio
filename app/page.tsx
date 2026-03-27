@@ -99,7 +99,8 @@ export default function Home() {
   useEffect(() => {
     const w = window.innerWidth;
     const h = window.innerHeight;
-    setPointer({ cx: w / 2, cy: h / 2 });
+    // Use setTimeout to avoid synchronous setState in effect
+    setTimeout(() => setPointer({ cx: w / 2, cy: h / 2 }), 0);
   }, []);
 
   const handleProjectCardClick = useCallback((project: 'nexora' | 'tobi' | 'unity') => {

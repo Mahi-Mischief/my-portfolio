@@ -44,7 +44,7 @@ export default function StickyNote({
   draggable = true,
 }: StickyNoteProps) {
   const initialRotation = useMemo(
-    () => (rotation !== undefined ? rotation : Math.random() * 10 - 5),
+    () => rotation !== undefined ? rotation : 0, // Remove Math.random() from render
     [rotation],
   );
 

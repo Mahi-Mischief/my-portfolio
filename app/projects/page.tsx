@@ -204,7 +204,8 @@ function ProjectsPageContent() {
               'TECH: Unity 3D, C# Programming',
               'ENGINE: Unity Physics, Lighting Systems',
               'GAMEPLAY: 3D Environment Design, Player Mechanics',
-              'EXPERIENCE: Immersive Audio-Visual Design'
+              'EXPERIENCE: Immersive Audio-Visual Design',
+              'STATUS: IN PROGRESS'
             ],
             images: ['/assets/unity-game.png'],
             googleDocId: 'canva.com/design/DAHE2xrOmi8/ugP5hVTTgiyi7zkv6BIjHg/view?embed'

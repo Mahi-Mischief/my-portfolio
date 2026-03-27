@@ -178,12 +178,15 @@ export default function StackedBentoCards({ activeIndex, setActiveIndex, onOpenC
   useEffect(() => {
     const activeCase = allCases[activeIndex];
     if (activeCase && stack[stack.length - 1] !== activeCase) {
-      setStack((prev) => {
-        const rest = prev.filter((x) => x !== activeCase);
-        return [...rest, activeCase];
-      });
+      // Use setTimeout to avoid synchronous setState in effect
+      setTimeout(() => {
+        setStack((prev) => {
+          const rest = prev.filter((x) => x !== activeCase);
+          return [...rest, activeCase];
+        });
+      }, 0);
     }
-  }, [activeIndex]);
+  }, [activeIndex, stack]);
 
   const bringToFront = (id: CaseStudyId) => {
     const index = allCases.indexOf(id);

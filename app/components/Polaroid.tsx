@@ -44,7 +44,7 @@ export default function Polaroid({
   onClick,
 }: PolaroidProps) {
   const initialRotation = useMemo(
-    () => (rotation !== undefined ? rotation : Math.random() * 8 - 4),
+    () => rotation !== undefined ? rotation : 0, // Remove Math.random() from render
     [rotation],
   );
 

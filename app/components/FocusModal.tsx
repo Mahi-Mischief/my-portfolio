@@ -22,6 +22,7 @@ export default function FocusModal({ isOpen, onClose, item }: FocusModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        console.log('ESC key pressed in FocusModal');
         onClose();
       }
     };
@@ -29,11 +30,13 @@ export default function FocusModal({ isOpen, onClose, item }: FocusModalProps) {
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
+      console.log('FocusModal opened, added listeners');
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
+      console.log('FocusModal closed, removed listeners');
     };
   }, [isOpen, onClose]);
 
@@ -51,6 +54,21 @@ export default function FocusModal({ isOpen, onClose, item }: FocusModalProps) {
           onClose();
         }}
       >
+        {/* Close Button - Rendered outside modal content */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('FocusModal close button clicked - Home page version');
+            onClose();
+          }}
+          className="fixed right-8 top-8 z-[1000] rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-colors cursor-pointer"
+          type="button"
+          style={{ pointerEvents: 'auto' }}
+        >
+          <X className="h-5 w-5" />
+        </button>
+        
         <motion.div
           layoutId={`focus-${item.id}`}
           initial={{ scale: 0.8, opacity: 0 }}
@@ -60,16 +78,6 @@ export default function FocusModal({ isOpen, onClose, item }: FocusModalProps) {
           className="relative mx-4 max-w-5xl w-full max-h-[90vh] bg-white rounded-2xl border border-zinc-200 shadow-[0_32px_80px_rgba(0,0,0,0.2)] overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close Button */}
-          <button
-            onClick={() => {
-              console.log('FocusModal close button clicked - Home page version');
-              onClose();
-            }}
-            className="absolute right-4 top-4 z-[210] rounded-lg p-2 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 transition-colors"
-          >
-            <X className="h-5 w-5" />
-          </button>
 
           <div className="flex h-full max-h-[90vh]">
             {/* Left Side - Gallery */}
