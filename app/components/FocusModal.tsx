@@ -15,6 +15,7 @@ interface FocusModalProps {
     technicalDetails: string[];
     images?: string[];
     googleDocId?: string;
+    repoUrl?: string;
   };
 }
 
@@ -145,6 +146,19 @@ export default function FocusModal({ isOpen, onClose, item }: FocusModalProps) {
                   </div>
                 ))}
               </div>
+
+              {item.repoUrl && (
+                <div className="mt-6">
+                  <a
+                    href={item.repoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center rounded-md border-2 border-zinc-900 bg-white px-4 py-2 font-mono-jet text-[10px] font-bold uppercase tracking-widest text-zinc-900 transition hover:bg-zinc-900 hover:text-white"
+                  >
+                    Open GitHub Repo
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

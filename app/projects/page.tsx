@@ -14,7 +14,7 @@ import { Siren } from "lucide-react";
 function ProjectsPageContent() {
   const searchParams = useSearchParams();
   const [glow, setGlow] = useState({ x: 50, y: 38 });
-  const [activeIndex, setActiveIndex] = useState(0); // Default to tobi (index 0)
+  const [activeIndex, setActiveIndex] = useState(0); // Default to the new internship project (index 0)
   const [isCaseStudyOpen, setIsCaseStudyOpen] = useState(false);
   const [isTobiModalOpen, setIsTobiModalOpen] = useState(false);
   const [isBlindSpotModalOpen, setIsBlindSpotModalOpen] = useState(false);
@@ -23,10 +23,10 @@ function ProjectsPageContent() {
   useEffect(() => {
     const projectParam = searchParams.get('project');
     console.log('Project parameter from URL:', projectParam);
-    if (projectParam !== null) {
+      if (projectParam !== null) {
       const projectIndex = parseInt(projectParam, 10);
       console.log('Parsed project index:', projectIndex);
-      if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex <= 2) {
+        if (!isNaN(projectIndex) && projectIndex >= 0 && projectIndex <= 4) {
         console.log('Setting active index to:', projectIndex);
         // Use setTimeout to avoid synchronous setState in effect
         setTimeout(() => setActiveIndex(projectIndex), 0);
@@ -47,7 +47,7 @@ function ProjectsPageContent() {
   }, []);
 
   const handleNextProject = useCallback(() => {
-    setActiveIndex((prev) => Math.min(2, prev + 1)); // 3 projects total (0, 1, 2)
+    setActiveIndex((prev) => Math.min(4, prev + 1)); // 5 projects total (0, 1, 2, 3, 4)
   }, []);
 
   const handleProjectSelect = useCallback((index: number) => {
@@ -156,7 +156,7 @@ function ProjectsPageContent() {
           />
           <ProjectNavigation
             currentIndex={activeIndex}
-            totalCount={3}
+            totalCount={5}
             onPrevious={handlePreviousProject}
             onNext={handleNextProject}
           />

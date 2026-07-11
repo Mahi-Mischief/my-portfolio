@@ -17,6 +17,7 @@ const WB = {
   craftsman: "/assets/graphic design image.png",
   blender: "/assets/blender room.jpeg",
   vibha: "/assets/vibhaboston.png",
+  libraryAlexandria: "/assets/libofalex.png",
   minecraft: "/assets/minecraft.png",
 } as const;
 
@@ -91,6 +92,23 @@ const HOBBYIST_ITEMS = [
     rotation: 0, // Will be set dynamically
     caption: 'UI/UX Internship',
     googleDocId: 'canva.com/design/DAG2WmJIobw/NRBUotO_VdBWIpD6w0dyyQ/view?embed'
+  },
+  {
+    id: 'library-alexandria',
+    type: 'polaroid' as const,
+    title: 'Library of Alexandria',
+    description: 'The Great Medical Archive',
+    technicalDetails: [
+      'Developed for HackForsyth 2025 Hackathon',
+      'Prompt: Reimagine a historical era with a modern tool that creates the most significant impact',
+      'Features: Intelligent symptom search and a universal disease directory',
+      'Tech: Python, Pygame',
+      'Repo: github.com/Mahi-Mischief/Library_Of_Alexandria'
+    ],
+    imageSrc: WB.libraryAlexandria,
+    rotation: 0, // Will be set dynamically
+    caption: 'Library of Alexandria',
+    googleDocId: undefined
   },
   
   // Sticky Notes (Text-Heavy)
@@ -211,20 +229,36 @@ const seededRandom = (seed: number) => {
 
   return (
     <>
-      <section className="relative z-[12] mx-auto mt-4 w-full max-w-6xl px-3 pb-32 pt-6 sm:px-4 sm:pb-36">
+      <section className="relative z-[12] mx-auto mt-4 w-full max-w-4xl sm:max-w-6xl px-3 sm:px-4 pb-32 pt-6 sm:pb-36">
         <h2
-          className="mb-8 text-center text-2xl font-semibold tracking-tight text-zinc-900 sm:mb-10 sm:text-3xl"
+          className="mb-6 text-center text-xl font-semibold tracking-tight text-zinc-900 sm:mb-8 sm:text-2xl lg:text-3xl"
           style={{ fontFamily: "var(--font-heading), serif" }}
         >
           The Hobbyist Workbench
         </h2>
 
         <div className="relative">
-          {/* Grid Layout: 2 rows of 5 items with 1% overlap */}
-          <div className="grid grid-cols-5 gap-0 relative">
+          {/* Grid Layout: Responsive - 2x5 on desktop, 1x2 on tablet, 1x1 on mobile */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-3 lg:gap-0 relative">
             {itemsWithRotations.map((item, index) => {
-              const row = Math.floor(index / 5);
-              const col = index % 5;
+              // Responsive positioning: maintain aspect ratio but scale down
+              const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+              const isTablet = typeof window !== 'undefined' && window.innerWidth >= 640 && window.innerWidth < 1024;
+              
+              let row, col;
+              if (isMobile) {
+                // Mobile: 1x1 grid (stacked vertically)
+                row = index;
+                col = 0;
+              } else if (isTablet) {
+                // Tablet: 1x2 grid
+                row = Math.floor(index / 2);
+                col = index % 2;
+              } else {
+                // Desktop: 2x5 grid
+                row = Math.floor(index / 5);
+                col = index % 5;
+              }
               
               return (
                 <motion.div
@@ -234,9 +268,11 @@ const seededRandom = (seed: number) => {
                   style={{
                     gridColumn: col + 1,
                     gridRow: row + 1,
-                    transform: `translateX(${col > 0 ? '-1%' : '0'})`,
+                    transform: `translateX(${col > 0 ? '-1%' : '0'}) scale(${isMobile ? 0.7 : isTablet ? 0.85 : 1})`,
+                    transformOrigin: 'center',
+                    zIndex: 10 + index
                   }}
-                  whileHover={item.type === 'polaroid' ? { scale: 1.05, cursor: 'pointer' } : {}}
+                  whileHover={item.type === 'polaroid' ? { scale: 1.05, cursor: 'pointer' } : undefined}
                   onClick={item.type === 'polaroid' ? () => handleItemClick(item) : undefined}
                 >
                   {item.type === 'polaroid' ? (
@@ -248,6 +284,7 @@ const seededRandom = (seed: number) => {
                       caption={item.caption}
                       draggable={false}
                       onClick={() => handleItemClick(item)}
+                      className={isMobile ? 'scale-75' : isTablet ? 'scale-90' : ''}
                     />
                   ) : (
                     <div onClick={() => handleItemClick(item)} className="cursor-pointer">
@@ -255,6 +292,7 @@ const seededRandom = (seed: number) => {
                         variant={item.variant}
                         rotation={item.rotation}
                         draggable={false}
+                        className={isMobile ? 'scale-75' : isTablet ? 'scale-90' : ''}
                       >
                         <div className="text-center font-mono-jet text-sm leading-snug">
                           <div className="font-bold text-zinc-900 mb-2">{item.title}</div>
@@ -280,6 +318,7 @@ const seededRandom = (seed: number) => {
               ...focusItem,
               images: focusItem.type === 'polaroid' ? [focusItem.imageSrc] : undefined,
               googleDocId: focusItem.googleDocId,
+              repoUrl: focusItem.id === 'library-alexandria' ? 'https://github.com/Mahi-Mischief/Library_Of_Alexandria' : undefined,
             }}
           />
         )}

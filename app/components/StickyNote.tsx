@@ -67,7 +67,7 @@ export default function StickyNote({
   );
 
   if (!draggable) {
-    return <article className={shellClass(variant, className)}>{inner}</article>;
+    return <article className={`${shellClass(variant, className)} ${className || ''}`}>{inner}</article>;
   }
 
   return (

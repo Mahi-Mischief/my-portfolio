@@ -17,6 +17,7 @@ import FocusModal from "./components/FocusModal";
  */
 
 const ASSETS = {
+  specialtyAppliances: "/assets/specialty appliances.png",
   nexora: "/assets/polaroid-nexora.png",
   tobiTodo: "/assets/polaroid-tobi-todo.png",
   unity: "/assets/unity-game.png",
@@ -30,6 +31,8 @@ const ASSETS = {
   java: "/assets/java.png",
   postgresql: "/assets/postgresql.png",
   python: "/assets/python.png",
+  databricks: "/assets/databricks.png",
+  metabase: "/assets/metabase.png",
   github: "/assets/github.png",
   vscode: "/assets/vscode.png",
   blender: "/assets/blender.png",
@@ -48,32 +51,35 @@ function getRandomRotation() {
 
 const LAYOUT = {
   /** Adjusted positions per user specifications */
+  specialty: { left: 87, top: 54, rotate: 2 }, // Shifted slightly upward
   nexora: { left: 24, top: 22, rotate: -8 }, // Moved 2% right from 22% to 24%
   portrait: { left: 50, top: 20, rotate: 2 }, // Moved down 5% from 15% to 20%
   tobi: { left: 78, top: 20, rotate: 6 }, // Moved down from 10% to 20%
   unity: { left: 15, top: 59, rotate: -12 }, // Moved 1% up from 60% to 59%
-  fbla: { left: 80, top: 75, rotate: 4 }, // Moved 5% left from 85% to 80%
-  gt: { left: 26, top: 84, rotate: 0 }, // Moved 1% left from 27% to 26%
+  fbla: { left: 74, top: 75, rotate: 4 }, // Slightly tighter left-side placement
+  gt: { left: 34, top: 84, rotate: 0 }, // Shifted right to better match the open area
   /** Tech Logo Scatter - Adjusted positions */
   stickers: {
     // The Top Perimeter
     java1: { left: 35, top: 8, rotate: 12 }, // Between Nexora and Headshot
     postgresql1: { left: 62, top: 10, rotate: -15 }, // Between Headshot and Tobi
+    databricks1: { left: 69, top: 18, rotate: -8 }, // Open pocket near the center-right
+    metabase1: { left: 58, top: 66, rotate: 10 }, // Lower middle, away from the top cluster
     
     // The Left Gutter
-    canva1: { left: 8, top: 30, rotate: -15 }, // Directly below Internship badge
-    github1: { left: 45, top: 75, rotate: 10 }, // Moved 2% up from 77% to 75%
-    firebase1: { left: 5, top: 65, rotate: 8 }, // Moved 2% left from 7% to 5%
-    blender1: { left: 8, top: 85, rotate: 15 }, // Bottom-left corner
+    canva1: { left: 6, top: 31, rotate: -15 }, // Left edge, clear of the main cards
+    github1: { left: 43, top: 77, rotate: 10 }, // Slightly lower-left of the workbench cluster
+    firebase1: { left: 4, top: 67, rotate: 8 }, // Left edge with enough padding
+    blender1: { left: 8, top: 86, rotate: 15 }, // Bottom-left corner
     
     // The Right Gutter
-    figma1: { left: 92, top: 28, rotate: 12 }, // Moved 1% left from 93% to 92%
-    python1: { left: 88, top: 50, rotate: -12 }, // Moved 4% left from 92% to 88%
-    flutter1: { left: 94, top: 60, rotate: -10 }, // Bottom 40%, right 6%
-    unity1: { left: 90, top: 85, rotate: -12 }, // Bottom-right corner
+    figma1: { left: 93, top: 26, rotate: 12 }, // Right top corner
+    python1: { left: 92, top: 26, rotate: -12 }, // Top-right corner
+    flutter1: { left: 95, top: 58, rotate: -10 }, // Right gutter
+    unity1: { left: 91, top: 85, rotate: -12 }, // Bottom-right corner
     
     // Above navigation bar
-    vscode1: { left: 55, top: 77, rotate: -6 }, // Next to GitHub (45%→55%)
+    vscode1: { left: 56, top: 78, rotate: -6 }, // Above the dock area
   },
 } as const;
 
@@ -103,9 +109,15 @@ export default function Home() {
     setTimeout(() => setPointer({ cx: w / 2, cy: h / 2 }), 0);
   }, []);
 
-  const handleProjectCardClick = useCallback((project: 'nexora' | 'tobi' | 'unity') => {
-    const projectIndex = project === 'nexora' ? 1 : project === 'tobi' ? 0 : 2; // nexora=1, tobi=0, unity=2
-    router.push(`/projects?project=${projectIndex}`);
+  const handleProjectCardClick = useCallback((project: 'specialty' | 'digital-pulse' | 'nexora' | 'tobi' | 'unity') => {
+    const projectIndexByCard = {
+      specialty: 0,
+      'digital-pulse': 1,
+      tobi: 2,
+      nexora: 3,
+      unity: 4,
+    } as const;
+    router.push(`/projects?project=${projectIndexByCard[project]}`);
   }, [router]);
 
   const handleAboutMeClick = useCallback(() => {
@@ -174,6 +186,20 @@ export default function Home() {
 
         <div
           className="pointer-events-auto absolute"
+          style={slotStyle(LAYOUT.specialty.left, LAYOUT.specialty.top)}
+        >
+          <Polaroid
+            draggable={true}
+            imageSrc={ASSETS.specialtyAppliances}
+            imageAlt="Specialty Appliances"
+            rotation={LAYOUT.specialty.rotate}
+            caption="Data Science & Operations Intern"
+            onClick={() => handleProjectCardClick('specialty')}
+          />
+        </div>
+
+        <div
+          className="pointer-events-auto absolute"
           style={slotStyle(LAYOUT.portrait.left, LAYOUT.portrait.top)}
         >
           <Polaroid
@@ -233,7 +259,8 @@ export default function Home() {
           className="pointer-events-auto absolute"
           style={slotStyle(LAYOUT.gt.left, LAYOUT.gt.top)}
         >
-          <StickyNote variant="lab" draggable={true} rotation={LAYOUT.gt.rotate}>
+          <div className="cursor-pointer" onClick={() => handleProjectCardClick('digital-pulse')}>
+            <StickyNote variant="lab" draggable={true} rotation={LAYOUT.gt.rotate}>
             <div className="flex items-start gap-2">
               <div className="flex-shrink-0 w-6 h-6 bg-amber-600 text-white rounded-full flex items-center justify-center text-[8px] font-bold">
                 R
@@ -245,7 +272,8 @@ export default function Home() {
                 <div>FOCUS: Real-time Fingertip Video Analysis</div>
               </div>
             </div>
-          </StickyNote>
+            </StickyNote>
+          </div>
         </div>
 
         {/* App Logo Stickers - 1/4th size of Polaroids - positioned in blank spaces */}
@@ -331,6 +359,34 @@ export default function Home() {
         >
           <Sticker size="xl" rotation={LAYOUT.stickers.postgresql1.rotate}>
             <img src={ASSETS.postgresql} alt="PostgreSQL" className="w-10 h-10 object-contain" draggable={false} />
+          </Sticker>
+        </div>
+
+        <div
+          className="pointer-events-auto absolute z-[5]"
+          style={{
+            position: "absolute",
+            left: `${LAYOUT.stickers.databricks1.left}%`,
+            top: `${LAYOUT.stickers.databricks1.top}%`,
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <Sticker size="xl" rotation={LAYOUT.stickers.databricks1.rotate}>
+            <img src={ASSETS.databricks} alt="Databricks" className="w-10 h-10 object-contain" draggable={false} />
+          </Sticker>
+        </div>
+
+        <div
+          className="pointer-events-auto absolute z-[5]"
+          style={{
+            position: "absolute",
+            left: `${LAYOUT.stickers.metabase1.left}%`,
+            top: `${LAYOUT.stickers.metabase1.top}%`,
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <Sticker size="xl" rotation={LAYOUT.stickers.metabase1.rotate}>
+            <img src={ASSETS.metabase} alt="Metabase" className="w-10 h-10 object-contain" draggable={false} />
           </Sticker>
         </div>
 
